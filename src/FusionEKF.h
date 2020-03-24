@@ -8,6 +8,7 @@
 #include "kalman_filter.h"
 #include "measurement_package.h"
 #include "tools.h"
+#include <math.h>
 
 class FusionEKF {
  public:
