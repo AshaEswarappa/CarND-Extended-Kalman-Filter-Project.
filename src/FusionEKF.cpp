@@ -89,20 +89,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack)
       float x  = rho * cos(phi);
       float y  = rho * sin(phi);
 	  
-	    if ( x < 0.0001) 
-	    {
-
-        x = 0.0001;
-
-      }
-	  
-	    if (y < 0.0001)
-	    {
-
-	      y = 0.0001;
-
-	    }
-	  
       float vx = rho_dot * cos(phi);
       float vy = rho_dot * sin(phi);
 	  
@@ -138,13 +124,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack)
 
   /**
    * Prediction
-   */
-
-  /**
-   * TODO: Update the state transition matrix F according to the new elapsed time.
-   * Time is measured in seconds.
-   * TODO: Update the process noise covariance matrix.
-   * Use noise_ax = 9 and noise_ay = 9 for your Q matrix.
    */
    /*Calculation of elapsed time and conevsrion of unit to seconds*/
   float dt = (measurement_pack.timestamp_ - previous_timestamp_);

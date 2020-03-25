@@ -40,41 +40,34 @@ void KalmanFilter::Update(const VectorXd &z)
   */
   VectorXd z_pred = H_ * x_;
   VectorXd y = z - z_pred;
-  MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_ * P_ * Ht + R_;
-  MatrixXd Si = S.inverse();
-  MatrixXd PHt = P_ * Ht;
-  MatrixXd K = PHt * Si;
-
-  // new state
-  x_ = x_ + (K * y);
-  long x_size = x_.size();
-  MatrixXd I = MatrixXd::Identity(x_size, x_size);
-  P_ = (I - K * H_) * P_;
+  
+  UpdateNewState(y);
 
 }
 
-void KalmanFilter::UpdateEKF(const VectorXd &z) {
+void KalmanFilter::UpdateEKF(const VectorXd &z) 
+{
   /**
    * TODO: update the state by using Extended Kalman Filter equations
    */
-  float px = x_(0);
+  float px = x_(0); 
   float py = x_(1);
   float vx = x_(2);
   float vy = x_(3);
 
-  float rho     = sqrt(px*px + py*py);
-  float theta   = atan2(py, px);
+  float rho     = sqrt(px*px + py*py); // sqrt(px^2+py^2)
+  float theta   = atan2(py, px); 
   
   float rho_dot;
 
+ // checks for the negative number to avoid complex number 
   if (fabs(rho) < 0.0001) 
   {
-    rho_dot = 0;
+    rho_dot = 0; // assign 0 if its negative
   } 
   else 
   {
-    rho_dot = (px*vx + py*vy) / rho;
+    rho_dot = (px*vx + py*vy) / rho;  // (px*vx/py*vy/sqrt(px^2+py^2))
   }
 
   VectorXd h = VectorXd(3);
@@ -95,9 +88,15 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
     
   }
     
+  UpdateNewState(y);
 
-  MatrixXd Ht = H_.transpose();
-  MatrixXd S = H_ * P_ * Ht + R_;
+}
+
+void KalmanFilter::UpdateNewState(const VectorXd &y)
+{
+
+  MatrixXd Ht = H_.transpose(); // Transpose of measurement matrix
+  MatrixXd S = H_ * P_ * Ht + R_; 
   MatrixXd Si = S.inverse();
   MatrixXd PHt = P_ * Ht;
   MatrixXd K = PHt * Si;
@@ -107,5 +106,5 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   long x_size = x_.size();
   MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - K * H_) * P_;
-  
+
 }

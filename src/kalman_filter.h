@@ -3,7 +3,16 @@
 
 #include "Eigen/Dense"
 
-class KalmanFilter {
+class KalmanFilter 
+{
+ private:
+
+   /**
+   * Updates the new state by using calculated state y as common function KF and EKF
+   * @param y
+   */
+  void UpdateNewState(const Eigen::VectorXd &y);
+
  public:
   /**
    * Constructor
